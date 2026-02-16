@@ -1,0 +1,50 @@
+﻿[
+  {
+    "id": 39,
+    "sources": [
+      "X:\\P3.B\\Programování\\Projekty\\zalohovaci_system\\testfolders\\source1",
+      "X:\\P3.B\\Programování\\Projekty\\zalohovaci_system\\testfolders\\source2"
+    ],
+    "targets": [
+      "X:\\P3.B\\Programování\\Projekty\\zalohovaci_system\\testfolders\\target1",
+      "X:\\P3.B\\Programování\\Projekty\\zalohovaci_system\\testfolders\\target2"
+    ],
+    "method": "incremental",
+    "timing": "*/2 * * * *",
+    "retention": {
+      "count": 3,
+      "size": 3
+    }
+  },
+  {
+    "id": 2,
+    "sources": [
+      "X:\\P3.B\\Programování\\Projekty\\zalohovaci_system\\testfolders\\source3"
+    ],
+    "targets": [
+      "X:\\P3.B\\Programování\\Projekty\\zalohovaci_system\\testfolders\\target3"
+    ],
+    "method": "differential",
+    "timing": "*/1 * * * *",
+    "retention": {
+      "count": 15,
+      "size": 3
+    }
+  },
+  {
+    "id": 100,
+    "sources": [
+      "X:\\P3.B\\Programování\\Projekty\\zalohovaci_system\\testfolders\\source4"
+    ],
+    "targets": [
+      "X:\\P3.B\\Programování\\Projekty\\zalohovaci_system\\testfolders\\target4",
+      "X:\\P3.B\\Programování\\Projekty\\zalohovaci_system\\testfolders\\target5"
+    ],
+    "method": "full",
+    "timing": "*/5 * * * *",
+    "retention": {
+      "count": 10,
+      "size": 1
+    }
+  }
+]
