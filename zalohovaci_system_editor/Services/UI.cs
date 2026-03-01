@@ -20,17 +20,6 @@ namespace zalohovaci_system_editor.Services
             
         }
 
-        public List<ConsoleKey> consoleKeys = new List<ConsoleKey>()
-        {
-            ConsoleKey.UpArrow,
-            ConsoleKey.DownArrow,
-            ConsoleKey.LeftArrow,
-            ConsoleKey.RightArrow,
-            ConsoleKey.Enter,
-            ConsoleKey.Escape,
-            ConsoleKey.Spacebar
-        };
-
         public void Draw()
         {
             Console.Clear();
@@ -41,16 +30,21 @@ namespace zalohovaci_system_editor.Services
             }
             Console.Write($"└{"".PadLeft(Console.WindowWidth / 2 - 2, '─')}┘└{"".PadLeft(Console.WindowWidth / 2 - 2, '─')}┘");
 
-            Console.SetCursorPosition( 2, 2 );
             LeftWindow.Draw();
 
-            Console.SetCursorPosition(Console.WindowWidth / 2 + 2, 2 );
             RightWindow.Draw();
         }
 
-        public void HandleKey(ConsoleKey key)
+        public void HandleKey(ConsoleKeyInfo key)
         {
-
+            if (ActiveSide)
+            {
+                RightWindow.HandleKey(key);
+            }
+            else
+            {
+                LeftWindow.HandleKey(key);
+            }
         }
     }
 }

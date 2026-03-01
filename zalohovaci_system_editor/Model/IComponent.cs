@@ -8,7 +8,7 @@ namespace zalohovaci_system_editor.Model
 {
     public interface IComponent
     {
-        public Dictionary<ConsoleKey, Action> KeyInputs { get; set; }
+        public Dictionary<ConsoleKey, Action> KeyInputs => new();
         public void Draw();
         public void HandleKey(ConsoleKeyInfo keyInfo);
     }

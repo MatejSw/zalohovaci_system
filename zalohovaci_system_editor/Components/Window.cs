@@ -7,12 +7,12 @@ using zalohovaci_system_editor.Model;
 
 namespace zalohovaci_system_editor.Components
 {
-    public abstract class Window : IComponent
+    public interface Window : IComponent
     {
-        public abstract Dictionary<ConsoleKey, Action> KeyInputs { get; set; }
+        public Dictionary<ConsoleKey, Action> KeyInputs => new();
 
-        public abstract void Draw();
+        public void Draw();
 
-        public abstract void HandleKey(ConsoleKeyInfo keyInfo);
+        public  void HandleKey(ConsoleKeyInfo keyInfo);
     }
 }

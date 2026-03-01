@@ -1,26 +1,60 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using zalohovaci_system.Model;
 using zalohovaci_system_editor.Components;
 
 namespace zalohovaci_system_editor.Windows
 {
     public class ConfigListWindow : Window
     {
-        public override Dictionary<ConsoleKey, Action> KeyInputs { get; set; }
+        static private List<BackupJob> BackupJobs;
+        public delegate void ConfigSelectedHandler(BackupJob backupJob);
+        static public event ConfigSelectedHandler OnConfigSelected;
 
-        public override void Draw()
+        public Dictionary<ConsoleKey, Action> KeyInputs => new Dictionary<ConsoleKey, Action>();
+
+        private static List<string> ConfigNames = new();
+        private DropdownList dropdownList;
+
+        public ConfigListWindow(List<BackupJob> backupJobs)
         {
-
+            BackupJobs = backupJobs;
+            for (int i = 0; i < backupJobs.Count; i++)
+            {
+                ConfigNames.Add($"Konfigurace {backupJobs[i].Id}");
+            }
+            dropdownList = new DropdownList(ConfigNames);
+            dropdownList.IsActive = true;
+            dropdownList.OnConfigSelected += (index) =>
+            {
+                OnConfigSelected?.Invoke(BackupJobs[index]);
+            };
         }
 
-        public override void HandleKey(ConsoleKeyInfo keyInfo)
+        public void Draw()
+        {
+            Console.SetCursorPosition(2, 2);
+            Console.Write("Seznam zálohovacích konfigurací:");
+
+            Console.SetCursorPosition(2, 4);
+
+            dropdownList.Draw();
+        }
+
+        public void HandleKey(ConsoleKeyInfo keyInfo)
         {
             if (KeyInputs.ContainsKey(keyInfo.Key))
             {
                 KeyInputs[keyInfo.Key].Invoke();
+            }
+            else
+            {
+                dropdownList.HandleKey(keyInfo);
             }
         }
     }
