@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using zalohovaci_system.Model;
@@ -11,11 +12,24 @@ namespace zalohovaci_system_editor.Windows
 {
     public class EditorWindow : Window
     {
-        public Dictionary<ConsoleKey, Action> KeyInputs => new Dictionary<ConsoleKey, Action>();
+        public Dictionary<ConsoleKey, Action> KeyInputs => new Dictionary<ConsoleKey, Action>()
+        {
+            {
+                ConsoleKey.Tab, () => { SelectedComponent = ++SelectedComponent % Components.Count; }
+            },
+            {
+                ConsoleKey.Enter, () => { ComponentSelected?.Invoke(); }
+            }
+        };
+
+        public bool Selected {  get; set; }
+
+        public static event Action ComponentSelected;
 
         public BackupJob SelectedBackupJob { get; set; }
 
         private List<IComponent> Components;
+        private int SelectedComponent = 0;
 
         public EditorWindow()
         {
@@ -33,15 +47,22 @@ namespace zalohovaci_system_editor.Windows
             Components.Add(new TextBox() { Label = "Časování" });
             Components.Add(new TextBox() { Label = "Počet" });
             Components.Add(new TextBox() { Label = "Velikost" });
+            Components.Add(new Button() { Label = "OK" });
+            Components.Add(new Button() { Label = "Cancel" });
         }
 
         public void Draw()
         {
+            for (int i = 0; i < Components.Count; i++)
+            {
+                Components[i].Selected = SelectedComponent == i;
+            } 
+
             Console.SetCursorPosition(Console.WindowWidth / 2 + 2, 2);
             Console.Write($"Konfigurace {SelectedBackupJob.Id}");
             Console.SetCursorPosition(Console.WindowWidth / 2 + 2, 4);
 
-            for (int i = 0; i < Components.Count - 2; i++)
+            for (int i = 0; i < Components.Count - 4; i++)
             {
                 Components[i].Draw();
                 Console.SetCursorPosition(Console.WindowWidth / 2 + 2, Console.CursorTop + 2);
@@ -52,6 +73,11 @@ namespace zalohovaci_system_editor.Windows
             Components[5].Draw();
             Console.SetCursorPosition(Console.WindowWidth / 2 + 3, Console.CursorTop + 1);
             Components[6].Draw();
+
+            Console.SetCursorPosition(Console.WindowWidth / 2 + 3, Console.CursorTop + 2);
+            Components[7].Draw();
+            Console.SetCursorPosition(Console.CursorLeft + 5, Console.CursorTop);
+            Components[8].Draw();
         }
 
         public void HandleKey(ConsoleKeyInfo keyInfo)

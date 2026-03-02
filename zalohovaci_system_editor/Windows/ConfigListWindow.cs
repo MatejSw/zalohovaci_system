@@ -18,6 +18,8 @@ namespace zalohovaci_system_editor.Windows
 
         public Dictionary<ConsoleKey, Action> KeyInputs => new Dictionary<ConsoleKey, Action>();
 
+        public bool Selected { get; set; }
+
         private static List<string> ConfigNames = new();
         private DropdownList dropdownList;
 

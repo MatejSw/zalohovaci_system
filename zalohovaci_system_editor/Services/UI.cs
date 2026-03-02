@@ -10,14 +10,33 @@ namespace zalohovaci_system_editor.Services
 {
     public class UI
     {
-        public Window LeftWindow { get; set; }
-        public Window RightWindow { get; set; }
+        public Stack<Window> LeftWindow { get; set; } = new Stack<Window>();
+        public Stack<Window> RightWindow { get; set; } = new Stack<Window>();
 
         public bool ActiveSide { get; set; } = false; // false = left, true = right
 
-        public UI()
+        public void PushWindow(Window window, bool side)
         {
-            
+            if (side)
+            {
+                RightWindow.Push(window);
+            }
+            else
+            {
+                LeftWindow.Push(window);
+            }
+        }
+
+        public void PullWindow(bool side)
+        {
+            if (side)
+            {
+                RightWindow.Pop();
+            }
+            else
+            {
+                LeftWindow.Pop();
+            }
         }
 
         public void Draw()
@@ -30,20 +49,20 @@ namespace zalohovaci_system_editor.Services
             }
             Console.Write($"└{"".PadLeft(Console.WindowWidth / 2 - 2, '─')}┘└{"".PadLeft(Console.WindowWidth / 2 - 2, '─')}┘");
 
-            LeftWindow.Draw();
+            LeftWindow.Peek().Draw();
 
-            RightWindow.Draw();
+            RightWindow.Peek().Draw();
         }
 
         public void HandleKey(ConsoleKeyInfo key)
         {
             if (ActiveSide)
             {
-                RightWindow.HandleKey(key);
+                RightWindow.Peek().HandleKey(key);
             }
             else
             {
-                LeftWindow.HandleKey(key);
+                LeftWindow.Peek().HandleKey(key);
             }
         }
     }

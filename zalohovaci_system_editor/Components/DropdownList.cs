@@ -23,6 +23,8 @@ namespace zalohovaci_system_editor.Components
         public string Label { get; set; } = "";
 
         public bool IsActive { get; set; } = false;
+        public bool Selected { get; set; }
+
         public List<string>? Values { get; set; }
         private int selectedLine = 0;
 
@@ -33,7 +35,13 @@ namespace zalohovaci_system_editor.Components
 
         public void Draw()
         {
+            if (Selected)
+            {
+                Console.BackgroundColor = ConsoleColor.Gray;
+                Console.ForegroundColor = ConsoleColor.Black;
+            }
             Console.Write(Label);
+            Console.ResetColor();
             Console.SetCursorPosition(Console.CursorLeft - Label.Length + 1, Console.CursorTop + 1);
             for (int i = 0; i < Values.Count; i++)
             {
@@ -47,6 +55,7 @@ namespace zalohovaci_system_editor.Components
                 Console.SetCursorPosition(Console.CursorLeft - value.Length, Console.CursorTop + 1);
                 Console.ResetColor();
             }
+            Console.SetCursorPosition(Console.CursorLeft, Console.CursorTop - 1);
         }
 
         public void HandleKey(ConsoleKeyInfo keyInfo)

@@ -4,17 +4,32 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using zalohovaci_system_editor.Model;
+using zalohovaci_system_editor.Windows;
 
 namespace zalohovaci_system_editor.Components
 {
-    internal class TextBox : IComponent
+    public class Button : IComponent
     {
-        public Dictionary<ConsoleKey, Action> KeyInputs => new();
+        public Dictionary<ConsoleKey, Action> KeyInputs => new Dictionary<ConsoleKey, Action>()
+        {
+            {
+                ConsoleKey.Enter, () => { execute.Invoke(); }
+            }
+        };
 
-        public string Label { get; set; }
-        public string Value { get; set; }
+        public Button()
+        {
+            EditorWindow.ComponentSelected += () =>
+            {
+                if (Selected) execute();
+            };
+        }
 
         public bool Selected { get; set; }
+
+        public Action execute;
+
+        public string Label;
 
         public void Draw()
         {
@@ -23,10 +38,8 @@ namespace zalohovaci_system_editor.Components
                 Console.BackgroundColor = ConsoleColor.Gray;
                 Console.ForegroundColor = ConsoleColor.Black;
             }
-            Console.Write(Label);
+            Console.Write($"[ {Label} ]");
             Console.ResetColor();
-            Console.SetCursorPosition(Console.CursorLeft - Label.Length + 1, Console.CursorTop + 1);
-            Console.Write(Value);
         }
 
         public void HandleKey(ConsoleKeyInfo keyInfo)
