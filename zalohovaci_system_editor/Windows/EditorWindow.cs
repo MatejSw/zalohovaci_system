@@ -18,13 +18,19 @@ namespace zalohovaci_system_editor.Windows
                 ConsoleKey.Tab, () => { SelectedComponent = ++SelectedComponent % Components.Count; }
             },
             {
-                ConsoleKey.Enter, () => { ComponentSelected?.Invoke(); }
+                ConsoleKey.Enter, () => 
+                { 
+                    ComponentSelected?.Invoke();
+                }
             }
         };
 
         public bool Selected {  get; set; }
+        public bool IsActive { get; set; }
 
         public static event Action ComponentSelected;
+
+        public event Action Cancel;
 
         public BackupJob SelectedBackupJob { get; set; }
 
@@ -47,8 +53,8 @@ namespace zalohovaci_system_editor.Windows
             Components.Add(new TextBox() { Label = "Časování" });
             Components.Add(new TextBox() { Label = "Počet" });
             Components.Add(new TextBox() { Label = "Velikost" });
-            Components.Add(new Button() { Label = "OK" });
-            Components.Add(new Button() { Label = "Cancel" });
+            Components.Add(new Button() { Label = "OK", execute = () => { Cancel?.Invoke(); } });
+            Components.Add(new Button() { Label = "Cancel", execute = () => { Cancel?.Invoke(); } });
         }
 
         public void Draw()
@@ -82,9 +88,16 @@ namespace zalohovaci_system_editor.Windows
 
         public void HandleKey(ConsoleKeyInfo keyInfo)
         {
-            if (KeyInputs.ContainsKey(keyInfo.Key))
+            if (Components.All(x => !x.IsActive))
             {
-                KeyInputs[keyInfo.Key].Invoke();
+                if (KeyInputs.ContainsKey(keyInfo.Key))
+                {
+                    KeyInputs[keyInfo.Key].Invoke();
+                }
+            }
+            else
+            {
+                Components[SelectedComponent].HandleKey(keyInfo);
             }
         }
 

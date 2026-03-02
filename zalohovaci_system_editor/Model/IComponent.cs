@@ -10,6 +10,7 @@ namespace zalohovaci_system_editor.Model
     {
         public Dictionary<ConsoleKey, Action> KeyInputs => new();
         public bool Selected { get; set; }
+        public bool IsActive { get; set; }
         public void Draw();
         public void HandleKey(ConsoleKeyInfo keyInfo);
     }

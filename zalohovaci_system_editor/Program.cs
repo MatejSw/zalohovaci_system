@@ -22,11 +22,17 @@ namespace zalohovaci_system_editor
             uI.PushWindow(emptyWindow, true);
             uI.PushWindow(configListWindow, false);
 
-            ConfigListWindow.OnConfigSelected += (backupJob) =>
+            configListWindow.OnConfigSelected += (backupJob) =>
             {
                 editorWindow.LoadBackupJob(backupJob);
                 uI.ActiveSide = true;
                 uI.PushWindow(editorWindow, true);
+            };
+
+            editorWindow.Cancel += () =>
+            {
+                uI.ActiveSide = false;
+                uI.PopWindow(true);
             };
 
             while (true)

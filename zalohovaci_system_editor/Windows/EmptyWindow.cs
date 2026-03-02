@@ -13,6 +13,7 @@ namespace zalohovaci_system_editor.Windows
         public Dictionary<ConsoleKey, Action> KeyInputs => new Dictionary<ConsoleKey, Action>();
 
         public bool Selected { get; set; }
+        public bool IsActive { get; set; }
 
         public void Draw()
         {

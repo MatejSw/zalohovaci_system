@@ -14,11 +14,12 @@ namespace zalohovaci_system_editor.Windows
     {
         static private List<BackupJob> BackupJobs;
         public delegate void ConfigSelectedHandler(BackupJob backupJob);
-        static public event ConfigSelectedHandler OnConfigSelected;
+        public event ConfigSelectedHandler OnConfigSelected;
 
         public Dictionary<ConsoleKey, Action> KeyInputs => new Dictionary<ConsoleKey, Action>();
 
         public bool Selected { get; set; }
+        public bool IsActive { get; set; }
 
         private static List<string> ConfigNames = new();
         private DropdownList dropdownList;

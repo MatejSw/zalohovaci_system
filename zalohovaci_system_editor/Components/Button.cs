@@ -26,6 +26,7 @@ namespace zalohovaci_system_editor.Components
         }
 
         public bool Selected { get; set; }
+        public bool IsActive { get; set; }
 
         public Action execute;
 

@@ -27,7 +27,7 @@ namespace zalohovaci_system_editor.Services
             }
         }
 
-        public void PullWindow(bool side)
+        public void PopWindow(bool side)
         {
             if (side)
             {

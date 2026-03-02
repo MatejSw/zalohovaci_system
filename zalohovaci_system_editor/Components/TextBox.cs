@@ -4,17 +4,36 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using zalohovaci_system_editor.Model;
+using zalohovaci_system_editor.Windows;
 
 namespace zalohovaci_system_editor.Components
 {
     internal class TextBox : IComponent
     {
-        public Dictionary<ConsoleKey, Action> KeyInputs => new();
+        public Dictionary<ConsoleKey, Action> KeyInputs => new()
+        {
+            {
+                ConsoleKey.Enter, () =>
+                {
+                    IsActive = false;
+                    Console.CursorVisible = false;
+                }
+            }
+        };
 
         public string Label { get; set; }
         public string Value { get; set; }
 
         public bool Selected { get; set; }
+        public bool IsActive { get; set; }
+
+        public TextBox()
+        {
+            EditorWindow.ComponentSelected += () =>
+            {
+                if (Selected) IsActive = true;
+            };
+        }
 
         public void Draw()
         {
@@ -23,15 +42,36 @@ namespace zalohovaci_system_editor.Components
                 Console.BackgroundColor = ConsoleColor.Gray;
                 Console.ForegroundColor = ConsoleColor.Black;
             }
+            if (IsActive)
+            {
+                Console.BackgroundColor = ConsoleColor.Gray;
+                Console.ForegroundColor = ConsoleColor.DarkGray;
+                Console.CursorVisible = true;
+            }
             Console.Write(Label);
             Console.ResetColor();
             Console.SetCursorPosition(Console.CursorLeft - Label.Length + 1, Console.CursorTop + 1);
             Console.Write(Value);
+            Console.ResetColor();
         }
 
         public void HandleKey(ConsoleKeyInfo keyInfo)
         {
-            throw new NotImplementedException();
+            if (IsActive)
+            {
+                if (KeyInputs.ContainsKey(keyInfo.Key)) KeyInputs[keyInfo.Key]?.Invoke();
+                else
+                {
+                    if (keyInfo.Key == ConsoleKey.Backspace)
+                    {
+                        Value = Value.Substring(0, Math.Max(Value.Length - 1,0));
+                    }
+                    else if (!char.IsControl(keyInfo.KeyChar))
+                    {
+                        Value += keyInfo.KeyChar;
+                    }
+                }
+            }
         }
     }
 }
