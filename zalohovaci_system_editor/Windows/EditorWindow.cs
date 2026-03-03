@@ -55,7 +55,7 @@ namespace zalohovaci_system_editor.Windows
             Components.Add(new TextBox() { Label = "Počet" });
             Components.Add(new TextBox() { Label = "Velikost" });
             Components.Add(new Button() { Label = "OK", execute = () => { OkButton(); } });
-            Components.Add(new Button() { Label = "Cancel", execute = () => { Cancel?.Invoke(); } });
+            Components.Add(new Button() { Label = "Storno", execute = () => { Cancel?.Invoke(); } });
         }
 
         public void Draw()

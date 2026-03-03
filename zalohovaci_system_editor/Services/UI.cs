@@ -4,7 +4,7 @@ using System.Linq;
 using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
-using zalohovaci_system_editor.Components;
+using zalohovaci_system_editor.Model;
 
 namespace zalohovaci_system_editor.Services
 {
