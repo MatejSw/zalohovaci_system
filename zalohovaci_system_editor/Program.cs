@@ -35,6 +35,11 @@ namespace zalohovaci_system_editor
                 uI.PopWindow(true);
             };
 
+            editorWindow.SaveChanges += () =>
+            {
+                configListWindow.SaveBackup(editorWindow.SelectedBackupJob);
+            };
+
             while (true)
             {
                 uI.Draw();

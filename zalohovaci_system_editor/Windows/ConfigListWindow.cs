@@ -60,5 +60,11 @@ namespace zalohovaci_system_editor.Windows
                 dropdownList.HandleKey(keyInfo);
             }
         }
+
+        public void SaveBackup(BackupJob backupJob)
+        {
+            BackupJobs[dropdownList.selectedLine] = backupJob;
+            dropdownList.Values[dropdownList.selectedLine] = $"Konfigurace {backupJob.Id}";
+        }
     }
 }

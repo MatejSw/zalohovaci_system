@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 using zalohovaci_system_editor.Model;
@@ -8,10 +9,23 @@ using zalohovaci_system_editor.Windows;
 
 namespace zalohovaci_system_editor.Components
 {
-    internal class TextBox : IComponent
+    public class OptionsBox : IComponent
     {
         public Dictionary<ConsoleKey, Action> KeyInputs => new()
         {
+            {
+                ConsoleKey.RightArrow, () =>
+                {
+                    selectedValue = (selectedValue + 1) % Options.Count;
+                }
+            },
+            {
+                ConsoleKey.LeftArrow, () =>
+                {
+                    selectedValue--;
+                    if (selectedValue < 0) selectedValue = selectedValue + Options.Count;
+                }
+            },
             {
                 ConsoleKey.Enter, () =>
                 {
@@ -19,14 +33,15 @@ namespace zalohovaci_system_editor.Components
                 }
             }
         };
-
-        public string Label { get; set; }
-        public string Value { get; set; }
-
         public bool Selected { get; set; }
         public bool IsActive { get; set; }
 
-        public TextBox()
+        public string Label;
+        public string Value;
+        public List<string> Options = new();
+        private int? selectedValue = null;
+
+        public OptionsBox()
         {
             EditorWindow.ComponentSelected += () =>
             {
@@ -52,28 +67,26 @@ namespace zalohovaci_system_editor.Components
             if (!IsActive)
             {
                 Console.ForegroundColor = ConsoleColor.DarkGray;
+                Console.Write(Value);
             }
-            Console.Write(Value);
+            else
+            {
+                Console.Write($"< {Value} >");
+            }
             Console.ResetColor();
         }
 
         public void HandleKey(ConsoleKeyInfo keyInfo)
         {
-            if (IsActive)
+            if (selectedValue == null)
             {
-                if (KeyInputs.ContainsKey(keyInfo.Key)) KeyInputs[keyInfo.Key]?.Invoke();
-                else
-                {
-                    if (keyInfo.Key == ConsoleKey.Backspace)
-                    {
-                        Value = Value.Substring(0, Math.Max(Value.Length - 1,0));
-                    }
-                    else if (!char.IsControl(keyInfo.KeyChar))
-                    {
-                        Value += keyInfo.KeyChar;
-                    }
-                }
+                selectedValue = Options.FindIndex(x => x == Value);
             }
+            if (KeyInputs.ContainsKey(keyInfo.Key))
+            {
+                KeyInputs[keyInfo.Key].Invoke();
+            }
+            Value = Options[(int)selectedValue];
         }
     }
 }

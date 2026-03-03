@@ -26,7 +26,7 @@ namespace zalohovaci_system_editor.Components
         public bool Selected { get; set; }
 
         public List<string>? Values { get; set; }
-        private int selectedLine = 0;
+        public int selectedLine = 0;
 
         public DropdownList(List<string>? values)
         {
@@ -45,6 +45,10 @@ namespace zalohovaci_system_editor.Components
             Console.SetCursorPosition(Console.CursorLeft - Label.Length + 1, Console.CursorTop + 1);
             for (int i = 0; i < Values.Count; i++)
             {
+                if (!IsActive)
+                {
+                    Console.ForegroundColor = ConsoleColor.DarkGray;
+                }
                 if (i == selectedLine && IsActive)
                 {
                     Console.BackgroundColor = ConsoleColor.Gray;

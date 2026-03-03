@@ -31,6 +31,7 @@ namespace zalohovaci_system_editor.Windows
         public static event Action ComponentSelected;
 
         public event Action Cancel;
+        public event Action SaveChanges;
 
         public BackupJob SelectedBackupJob { get; set; }
 
@@ -49,11 +50,11 @@ namespace zalohovaci_system_editor.Windows
             {
                 Label = "Cíle"
             });
-            Components.Add(new TextBox() { Label = "Metoda" });
+            Components.Add(new OptionsBox() { Label = "Metoda", Options = ["Full", "Differencial", "Incremental"] });
             Components.Add(new TextBox() { Label = "Časování" });
             Components.Add(new TextBox() { Label = "Počet" });
             Components.Add(new TextBox() { Label = "Velikost" });
-            Components.Add(new Button() { Label = "OK", execute = () => { Cancel?.Invoke(); } });
+            Components.Add(new Button() { Label = "OK", execute = () => { OkButton(); } });
             Components.Add(new Button() { Label = "Cancel", execute = () => { Cancel?.Invoke(); } });
         }
 
@@ -115,10 +116,32 @@ namespace zalohovaci_system_editor.Windows
                 Label = "Cíle",
                 Values = backupJob.Targets
             };
-            Components[3] = new TextBox() { Label = "Metoda", Value = backupJob.Method.ToString() };
+            Components[3] = new OptionsBox() { Label = "Metoda", Options = ["Full", "Differencial", "Incremental"], Value = backupJob.Method.ToString() };
             Components[4] = new TextBox() { Label = "Časování", Value = backupJob.Timing };
             Components[5] = new TextBox() { Label = "Počet", Value = backupJob.Retention.Count.ToString() };
             Components[6] = new TextBox() { Label = "Velikost", Value = backupJob.Retention.Size.ToString() };
         }   
+
+        private void OkButton()
+        {
+            TextBox id = Components[0] as TextBox;
+            DropdownList sources = Components[1] as DropdownList;
+            DropdownList targets = Components[2] as DropdownList;
+            OptionsBox method = Components[3] as OptionsBox;
+            TextBox timing = Components[4] as TextBox;
+            TextBox retCount = Components[5] as TextBox;
+            TextBox retSize = Components[6] as TextBox;
+
+            SelectedBackupJob.Id = Convert.ToInt32(id.Value);
+            SelectedBackupJob.Sources = sources.Values;
+            SelectedBackupJob.Targets = targets.Values;
+            SelectedBackupJob.Method = method.Value == "Full" ? BackupMethod.Full : method.Value == "Differencial" ? BackupMethod.Differential : BackupMethod.Incremental;
+            SelectedBackupJob.Timing = timing.Value;
+            SelectedBackupJob.Retention.Count = Convert.ToInt32(retCount.Value);
+            SelectedBackupJob.Retention.Size = Convert.ToInt32(retSize.Value);
+
+            SaveChanges?.Invoke();
+            Cancel?.Invoke();
+        }
     }
 }
