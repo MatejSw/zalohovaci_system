@@ -45,7 +45,7 @@ namespace zalohovaci_system.Services
             Directory.Delete(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Swientek_Backuper", "temp"), true);
         }
 
-        public virtual void CreateSnapshot(List<Snapshot> snapshots, string path, BackupMethod method, int id)
+        public virtual void CreateSnapshot(List<Snapshot> snapshots, string path, BackupMethod method, string id)
         {
             snapshots.Add(new Snapshot
             {

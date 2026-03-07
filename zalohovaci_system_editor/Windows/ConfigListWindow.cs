@@ -17,16 +17,31 @@ namespace zalohovaci_system_editor.Windows
         public delegate void ConfigSelectedHandler(BackupJob backupJob);
         public event ConfigSelectedHandler OnConfigSelected;
 
-        public Dictionary<ConsoleKey, Action> KeyInputs => new Dictionary<ConsoleKey, Action>();
+        public Dictionary<ConsoleKey, Action> KeyInputs => new Dictionary<ConsoleKey, Action>()
+        {
+            {
+                ConsoleKey.Insert, () =>
+                {
+                    CreateNewJob?.Invoke();
+                }
+            },
+            {
+                ConsoleKey.Delete, () =>
+                {
+                    DeleteSelectedJob?.Invoke(BackupJobs[dropdownList.selectedLine]);
+                }
+            }
+        };
 
-        public bool Selected { get; set; }
-        public bool IsActive { get; set; }
-
-        private static List<string> ConfigNames = new();
+        private static List<string> ConfigNames;
         private DropdownList dropdownList;
+
+        public event Action CreateNewJob;
+        public event Action<BackupJob> DeleteSelectedJob;
 
         public ConfigListWindow(List<BackupJob> backupJobs)
         {
+            ConfigNames = new List<string>();
             BackupJobs = backupJobs;
             for (int i = 0; i < backupJobs.Count; i++)
             {
@@ -42,12 +57,18 @@ namespace zalohovaci_system_editor.Windows
 
         public void Draw()
         {
-            Console.SetCursorPosition(2, 2);
+            int cursorLeft = Console.CursorLeft;
+            Console.SetCursorPosition(cursorLeft, 2);
             Console.Write("Seznam zálohovacích konfigurací:");
 
-            Console.SetCursorPosition(2, 4);
+            Console.SetCursorPosition(cursorLeft, 4);
 
             dropdownList.Draw();
+
+            Console.SetCursorPosition(cursorLeft, Console.WindowHeight - 4);
+            Console.Write("INSERT - Vytvořit novou konfiguraci");
+            Console.SetCursorPosition(cursorLeft, Console.CursorTop + 1);
+            Console.Write("DELETE - Smazat vybranou konfiguraci");
         }
 
         public void HandleKey(ConsoleKeyInfo keyInfo)
@@ -66,6 +87,22 @@ namespace zalohovaci_system_editor.Windows
         {
             BackupJobs[dropdownList.selectedLine] = backupJob;
             dropdownList.Values[dropdownList.selectedLine] = $"Konfigurace {backupJob.Id}";
+        }
+
+        public void AddBackup(BackupJob backupJob)
+        {
+            BackupJobs.Add(backupJob);
+            dropdownList.Values.Add($"Konfigurace {backupJob.Id}");
+        }
+
+        public void RemoveBackup(BackupJob backupJob)
+        {
+            int index = BackupJobs.IndexOf(backupJob);
+            if (index >= 0)
+            {
+                BackupJobs.RemoveAt(index);
+                dropdownList.Values.RemoveAt(index);
+            }
         }
     }
 }

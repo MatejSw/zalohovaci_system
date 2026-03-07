@@ -13,31 +13,124 @@ namespace zalohovaci_system_editor
             Console.CursorVisible = false;
             Console.Title = "Zálohovací systém - Editor";
 
-            List<BackupJob> backupJobs = JsonConvert.DeserializeObject<List<BackupJob>>(File.ReadAllText(@"X:\P3.B\Programování\Projekty\zalohovaci_system\zalohovaci_system\conf\backup_config.json")) ?? new List<BackupJob>();
+            List<BackupJob> backupJobs = JsonConvert.DeserializeObject<List<BackupJob>>(File.ReadAllText(@"C:\Users\matej\source\repos\zalohovaci_system\zalohovaci_system\conf\backup_config.json")) ?? new List<BackupJob>();
 
             ConfigListWindow configListWindow = new ConfigListWindow(backupJobs);
             EditorWindow editorWindow = new EditorWindow();
             EmptyWindow emptyWindow = new EmptyWindow();
+            CreateNewJobDBox createNewJobDBox = new CreateNewJobDBox();
+            CreateNewJobWindow createNewJobWindow = new CreateNewJobWindow();
+            DeleteJobDBox deleteJobDBox = new DeleteJobDBox();
+
+            SinglePane singlePane = new SinglePane();
+            DoublePane doublePane = new DoublePane()
+            {
+                LeftWindow = configListWindow,
+                RightWindow = emptyWindow
+            };
+            DialogueBox dialogueBox = new DialogueBox();
+
             UI uI = new UI();
-            uI.PushWindow(emptyWindow, true);
-            uI.PushWindow(configListWindow, false);
+            uI.modules.Push(doublePane);
 
             configListWindow.OnConfigSelected += (backupJob) =>
             {
                 editorWindow.LoadBackupJob(backupJob);
-                uI.ActiveSide = true;
-                uI.PushWindow(editorWindow, true);
+                doublePane.RightWindow = editorWindow;
+                doublePane.ActiveSide = true;
+            };
+
+            configListWindow.CreateNewJob += () =>
+            {
+                dialogueBox.Window = createNewJobDBox;
+                uI.modules.Push(dialogueBox);
+            };
+
+            configListWindow.DeleteSelectedJob += (backupJob) =>
+            {
+                string id = backupJob.Id;
+                dialogueBox.Window = deleteJobDBox;
+                deleteJobDBox.Id = id;
+                uI.modules.Push(dialogueBox);
             };
 
             editorWindow.Cancel += () =>
             {
-                uI.ActiveSide = false;
-                uI.PopWindow(true);
+                doublePane.RightWindow = emptyWindow;
+                doublePane.ActiveSide = false;
             };
 
             editorWindow.SaveChanges += () =>
             {
                 configListWindow.SaveBackup(editorWindow.SelectedBackupJob);
+                using (StreamWriter sw = new StreamWriter(@"C:\Users\matej\source\repos\zalohovaci_system\zalohovaci_system\conf\backup_config.json"))
+                {
+                    sw.Write(JsonConvert.SerializeObject(backupJobs, Formatting.Indented));
+                }
+            };
+
+            createNewJobDBox.Cancel += () =>
+            {
+                uI.modules.Pop();
+            };
+
+            createNewJobDBox.Create += (id) =>
+            {
+                singlePane.ParentWindow = createNewJobWindow;
+                BackupJob job = new BackupJob()
+                {
+                    Id = id,
+                    Sources = new List<string>(),
+                    Targets = new List<string>(),
+                    Timing = "* * * * *",
+                    Method = BackupMethod.Full,
+                    Retention = new BackupRetention()
+                    {
+                        Size = 0,
+                        Count = 0
+                    },
+                };
+                createNewJobWindow.LoadBackupJob(job);
+                uI.modules.Push(singlePane);
+            };
+
+            createNewJobWindow.Cancel += () =>
+            {
+                uI.modules.Pop();
+                uI.modules.Pop();
+            };
+
+            createNewJobWindow.Create += (id) =>
+            {
+                BackupJob job = createNewJobWindow.SelectedBackupJob;
+                backupJobs.Add(job);
+                configListWindow.AddBackup(job);
+                using (StreamWriter sw = new StreamWriter(@"C:\Users\matej\source\repos\zalohovaci_system\zalohovaci_system\conf\backup_config.json"))
+                {
+                    sw.Write(JsonConvert.SerializeObject(backupJobs, Formatting.Indented));
+                }
+                uI.modules.Pop();
+                uI.modules.Pop();
+            };
+
+            deleteJobDBox.Cancel += () =>
+            {
+                uI.modules.Pop();
+            };
+
+            deleteJobDBox.Delete += (id) =>
+            {
+                BackupJob? job = backupJobs.FirstOrDefault(j => j.Id == id);
+                if (job != null)
+                {
+                    backupJobs.Remove(job);
+                    configListWindow.RemoveBackup(job);
+                    using (StreamWriter sw = new StreamWriter(@"C:\Users\matej\source\repos\zalohovaci_system\zalohovaci_system\conf\backup_config.json"))
+                    {
+                        sw.Write(JsonConvert.SerializeObject(backupJobs, Formatting.Indented));
+                    }
+                }
+                uI.modules.Pop();
             };
 
             while (true)

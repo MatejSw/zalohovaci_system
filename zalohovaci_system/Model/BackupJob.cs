@@ -15,6 +15,6 @@ namespace zalohovaci_system.Model
         public BackupRetention Retention { get; set; }
         public BackupMethod Method { get; set; }
         public DateTime NextOccurence { get; set; } = DateTime.MinValue;
-        public int Id { get; set; }
+        public string Id { get; set; }
     }
 }

@@ -20,8 +20,8 @@ namespace zalohovaci_system_editor.Components
             }
         };
 
-        public string Label { get; set; }
-        public string Value { get; set; }
+        public string Label { get; set; } = "";
+        public string Value { get; set; } = "";
 
         public bool Selected { get; set; }
         public bool IsActive { get; set; }
@@ -54,6 +54,10 @@ namespace zalohovaci_system_editor.Components
                 Console.ForegroundColor = ConsoleColor.DarkGray;
             }
             Console.Write(Value);
+            if (IsActive)
+            {
+                Console.Write("_");
+            }
             Console.ResetColor();
         }
 

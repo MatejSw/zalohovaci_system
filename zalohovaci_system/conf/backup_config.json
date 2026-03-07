@@ -1,50 +1,53 @@
-﻿[
+[
   {
-    "id": 39,
-    "sources": [
+    "Sources": [
       "X:\\P3.B\\Programování\\Projekty\\zalohovaci_system\\testfolders\\source1",
       "X:\\P3.B\\Programování\\Projekty\\zalohovaci_system\\testfolders\\source2"
     ],
-    "targets": [
+    "Targets": [
       "X:\\P3.B\\Programování\\Projekty\\zalohovaci_system\\testfolders\\target1",
       "X:\\P3.B\\Programování\\Projekty\\zalohovaci_system\\testfolders\\target2"
     ],
-    "method": "incremental",
-    "timing": "*/2 * * * *",
-    "retention": {
-      "count": 3,
-      "size": 3
-    }
+    "Timing": "*/2 * * * *",
+    "Retention": {
+      "Count": 3,
+      "Size": 3
+    },
+    "Method": 2,
+    "NextOccurence": "0001-01-01T00:00:00",
+    "Id": "39"
   },
   {
-    "id": 2,
-    "sources": [
+    "Sources": [
       "X:\\P3.B\\Programování\\Projekty\\zalohovaci_system\\testfolders\\source3"
     ],
-    "targets": [
+    "Targets": [
       "X:\\P3.B\\Programování\\Projekty\\zalohovaci_system\\testfolders\\target3"
     ],
-    "method": "differential",
-    "timing": "*/1 * * * *",
-    "retention": {
-      "count": 15,
-      "size": 3
-    }
+    "Timing": "*/1 * * * *",
+    "Retention": {
+      "Count": 15,
+      "Size": 3
+    },
+    "Method": 1,
+    "NextOccurence": "0001-01-01T00:00:00",
+    "Id": "2"
   },
   {
-    "id": 100,
-    "sources": [
+    "Sources": [
       "X:\\P3.B\\Programování\\Projekty\\zalohovaci_system\\testfolders\\source4"
     ],
-    "targets": [
+    "Targets": [
       "X:\\P3.B\\Programování\\Projekty\\zalohovaci_system\\testfolders\\target4",
       "X:\\P3.B\\Programování\\Projekty\\zalohovaci_system\\testfolders\\target5"
     ],
-    "method": "full",
-    "timing": "*/5 * * * *",
-    "retention": {
-      "count": 10,
-      "size": 1
-    }
+    "Timing": "*/5 * * * *",
+    "Retention": {
+      "Count": 10,
+      "Size": 1
+    },
+    "Method": 0,
+    "NextOccurence": "0001-01-01T00:00:00",
+    "Id": "100"
   }
 ]

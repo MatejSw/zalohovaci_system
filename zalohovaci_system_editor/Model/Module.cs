@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 
 namespace zalohovaci_system_editor.Model
 {
-    public interface DialogueBox : IComponent
+    public interface Module
     {
-        public Dictionary<ConsoleKey, Action> KeyInputs => new();
-
         public void Draw();
 
         public void HandleKey(ConsoleKeyInfo keyInfo);

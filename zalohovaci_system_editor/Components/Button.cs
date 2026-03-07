@@ -17,14 +17,6 @@ namespace zalohovaci_system_editor.Components
             }
         };
 
-        public Button()
-        {
-            EditorWindow.ComponentSelected += () =>
-            {
-                if (Selected) execute();
-            };
-        }
-
         public bool Selected { get; set; }
         public bool IsActive { get; set; }
 
@@ -45,7 +37,10 @@ namespace zalohovaci_system_editor.Components
 
         public void HandleKey(ConsoleKeyInfo keyInfo)
         {
-            throw new NotImplementedException();
+            if (KeyInputs.ContainsKey(keyInfo.Key))
+            {
+                KeyInputs[keyInfo.Key].Invoke();
+            }
         }
     }
 }

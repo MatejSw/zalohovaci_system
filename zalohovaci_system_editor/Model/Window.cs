@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace zalohovaci_system_editor.Model
 {
-    public interface Window : IComponent
+    public interface Window
     {
         public Dictionary<ConsoleKey, Action> KeyInputs => new();
 

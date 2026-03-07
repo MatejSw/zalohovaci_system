@@ -25,9 +25,6 @@ namespace zalohovaci_system_editor.Windows
             }
         };
 
-        public bool Selected {  get; set; }
-        public bool IsActive { get; set; }
-
         public static event Action ComponentSelected;
 
         public event Action Cancel;
@@ -35,7 +32,7 @@ namespace zalohovaci_system_editor.Windows
 
         public BackupJob SelectedBackupJob { get; set; }
 
-        private List<IComponent> Components;
+        protected List<IComponent> Components;
         private int SelectedComponent = 0;
 
         public EditorWindow()
@@ -58,30 +55,30 @@ namespace zalohovaci_system_editor.Windows
             Components.Add(new Button() { Label = "Storno", execute = () => { Cancel?.Invoke(); } });
         }
 
-        public void Draw()
+        public virtual void Draw()
         {
+            int cursorLeft = Console.CursorLeft;
             for (int i = 0; i < Components.Count; i++)
             {
                 Components[i].Selected = SelectedComponent == i;
             } 
 
-            Console.SetCursorPosition(Console.WindowWidth / 2 + 2, 2);
             Console.Write($"Konfigurace {SelectedBackupJob.Id}");
-            Console.SetCursorPosition(Console.WindowWidth / 2 + 2, 4);
+            Console.SetCursorPosition(cursorLeft, Console.CursorTop + 2);
 
             for (int i = 0; i < Components.Count - 4; i++)
             {
                 Components[i].Draw();
-                Console.SetCursorPosition(Console.WindowWidth / 2 + 2, Console.CursorTop + 2);
+                Console.SetCursorPosition(cursorLeft, Console.CursorTop + 2);
             }
 
             Console.Write("Retence:");
-            Console.SetCursorPosition(Console.WindowWidth / 2 + 3, Console.CursorTop + 1);
+            Console.SetCursorPosition(cursorLeft, Console.CursorTop + 1);
             Components[5].Draw();
-            Console.SetCursorPosition(Console.WindowWidth / 2 + 3, Console.CursorTop + 1);
+            Console.SetCursorPosition(cursorLeft, Console.CursorTop + 1);
             Components[6].Draw();
 
-            Console.SetCursorPosition(Console.WindowWidth / 2 + 3, Console.CursorTop + 2);
+            Console.SetCursorPosition(cursorLeft, Console.CursorTop + 2);
             Components[7].Draw();
             Console.SetCursorPosition(Console.CursorLeft + 5, Console.CursorTop);
             Components[8].Draw();
@@ -99,6 +96,11 @@ namespace zalohovaci_system_editor.Windows
             else
             {
                 Components[SelectedComponent].HandleKey(keyInfo);
+            }
+
+            if (Components[SelectedComponent] is Button button)
+            {
+                button.HandleKey(keyInfo);
             }
         }
 
@@ -132,7 +134,7 @@ namespace zalohovaci_system_editor.Windows
             TextBox retCount = Components[5] as TextBox;
             TextBox retSize = Components[6] as TextBox;
 
-            SelectedBackupJob.Id = Convert.ToInt32(id.Value);
+            SelectedBackupJob.Id = id.Value;
             SelectedBackupJob.Sources = sources.Values;
             SelectedBackupJob.Targets = targets.Values;
             SelectedBackupJob.Method = method.Value == "Full" ? BackupMethod.Full : method.Value == "Differencial" ? BackupMethod.Differential : BackupMethod.Incremental;
