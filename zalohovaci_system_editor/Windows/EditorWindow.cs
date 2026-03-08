@@ -30,6 +30,8 @@ namespace zalohovaci_system_editor.Windows
         public event Action Cancel;
         public event Action SaveChanges;
 
+        public event Action<List<string>> EditDirectories;
+
         public BackupJob SelectedBackupJob { get; set; }
 
         protected List<IComponent> Components;
@@ -73,9 +75,9 @@ namespace zalohovaci_system_editor.Windows
             }
 
             Console.Write("Retence:");
-            Console.SetCursorPosition(cursorLeft, Console.CursorTop + 1);
+            Console.SetCursorPosition(cursorLeft + 1, Console.CursorTop + 1);
             Components[5].Draw();
-            Console.SetCursorPosition(cursorLeft, Console.CursorTop + 1);
+            Console.SetCursorPosition(cursorLeft + 1, Console.CursorTop + 1);
             Components[6].Draw();
 
             Console.SetCursorPosition(cursorLeft, Console.CursorTop + 2);
@@ -102,6 +104,11 @@ namespace zalohovaci_system_editor.Windows
             {
                 button.HandleKey(keyInfo);
             }
+
+            if (Components[SelectedComponent] is DropdownList list && keyInfo.Key == ConsoleKey.Enter)
+            {
+                EditDirectories?.Invoke(list.Values);
+            }
         }
 
         public void LoadBackupJob(BackupJob backupJob)
@@ -111,12 +118,14 @@ namespace zalohovaci_system_editor.Windows
             Components[1] = new DropdownList(backupJob.Sources)
             {
                 Label = "Zdroje",
-                Values = backupJob.Sources
+                Values = backupJob.Sources,
+                Height = 1
             };
             Components[2] = new DropdownList(backupJob.Targets)
             {
                 Label = "Cíle",
-                Values = backupJob.Targets
+                Values = backupJob.Targets,
+                Height = 1
             };
             Components[3] = new OptionsBox() { Label = "Metoda", Options = ["Full", "Differencial", "Incremental"], Value = backupJob.Method.ToString() };
             Components[4] = new TextBox() { Label = "Časování", Value = backupJob.Timing };
@@ -144,6 +153,19 @@ namespace zalohovaci_system_editor.Windows
 
             SaveChanges?.Invoke();
             Cancel?.Invoke();
+        }
+
+        public void SaveDirectories(List<string> directories)
+        {
+            if (Components[SelectedComponent] is DropdownList list)
+            {
+                list.Values = directories;
+            }
+        }
+
+        public void SelectWindow()
+        {
+            SelectedComponent = 0;
         }
     }
 }

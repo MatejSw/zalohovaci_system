@@ -8,7 +8,7 @@ using zalohovaci_system_editor.Model;
 
 namespace zalohovaci_system_editor.Windows
 {
-    internal class CreateNewJobDBox : Window
+    public class ChangeDriveWindow : Window
     {
         public Dictionary<ConsoleKey, Action> KeyInputs => new()
         {
@@ -27,9 +27,9 @@ namespace zalohovaci_system_editor.Windows
         private int SelectedComponent = 0;
 
         public event Action Cancel;
-        public event Action<string> Create;
+        public event Action<string> Confirm;
 
-        public CreateNewJobDBox()
+        public ChangeDriveWindow()
         {
             components.Add(new TextBox());
             components.Add(new Button() { Label = "OK", execute = () => { CreateNewJob(); } });
@@ -49,7 +49,7 @@ namespace zalohovaci_system_editor.Windows
                 components[0].IsActive = false;
             }
 
-            Console.Write("Napište ID nové zálohovací konfigurace:");
+            Console.Write("Napište písmeno disku:");
             Console.SetCursorPosition(cursorLeft, Console.CursorTop + 2);
             components[0].Draw();
             Console.SetCursorPosition(cursorLeft + 2, Console.CursorTop + 4);
@@ -73,16 +73,7 @@ namespace zalohovaci_system_editor.Windows
         private void CreateNewJob()
         {
             TextBox textBox = (TextBox)components[0];
-            Create?.Invoke(textBox.Value);
-        }
-
-        public void SelectWindow()
-        {
-            SelectedComponent = 0;
-            components.Clear();
-            components.Add(new TextBox());
-            components.Add(new Button() { Label = "OK", execute = () => { CreateNewJob(); } });
-            components.Add(new Button() { Label = "Storno", execute = () => { Cancel?.Invoke(); } });
+            Confirm?.Invoke(textBox.Value);
         }
     }
 }

@@ -37,12 +37,14 @@ namespace zalohovaci_system_editor
             {
                 editorWindow.LoadBackupJob(backupJob);
                 doublePane.RightWindow = editorWindow;
+                editorWindow.SelectWindow();
                 doublePane.ActiveSide = true;
             };
 
             configListWindow.CreateNewJob += () =>
             {
                 dialogueBox.Window = createNewJobDBox;
+                createNewJobDBox.SelectWindow();
                 uI.modules.Push(dialogueBox);
             };
 
@@ -67,6 +69,66 @@ namespace zalohovaci_system_editor
                 {
                     sw.Write(JsonConvert.SerializeObject(backupJobs, Formatting.Indented));
                 }
+            };
+
+            editorWindow.EditDirectories += (list) =>
+            {
+                DirectorySelectorWindow tempDSW = new DirectorySelectorWindow();
+                DirectoryListWindow tempDLW = new DirectoryListWindow();
+                DoublePane doublePane2 = new DoublePane()
+                {
+                    LeftWindow = tempDSW,
+                    RightWindow = tempDLW
+                };
+
+                uI.modules.Push(doublePane2);
+
+                tempDLW.SetDirectories(list);
+                tempDSW.SelectWindow();
+
+                tempDSW.OnDirectorySelected += (directory) =>
+                {
+                    tempDLW.AddDirectory(directory);
+                };
+
+                tempDSW.SwitchWindow += () =>
+                {
+                    doublePane2.ActiveSide = true;
+                    tempDLW.SelectWindow();
+                };
+
+                tempDSW.ChangeDriveEvent += () =>
+                {
+                    ChangeDriveWindow changeDriveWindow = new ChangeDriveWindow();
+                    dialogueBox.Window = changeDriveWindow;
+                    uI.modules.Push(dialogueBox);
+                    changeDriveWindow.Confirm += (drive) =>
+                    {
+                        tempDSW.ChangeDrive(drive);
+                        uI.modules.Pop();
+                    };
+                    changeDriveWindow.Cancel += () =>
+                    {
+                        uI.modules.Pop();
+                    };
+                };
+
+                tempDLW.SwitchWindow += () =>
+                {
+                    doublePane2.ActiveSide = false;
+                    tempDSW.SelectWindow();
+                };
+
+                tempDLW.Cancel += () =>
+                {
+                    uI.modules.Pop();
+                };
+
+                tempDLW.SaveDirectories += (directories) =>
+                {
+                    editorWindow.SaveDirectories(directories);
+                    uI.modules.Pop();
+                };
             };
 
             createNewJobDBox.Cancel += () =>
@@ -103,7 +165,6 @@ namespace zalohovaci_system_editor
             createNewJobWindow.Create += (id) =>
             {
                 BackupJob job = createNewJobWindow.SelectedBackupJob;
-                backupJobs.Add(job);
                 configListWindow.AddBackup(job);
                 using (StreamWriter sw = new StreamWriter(@"C:\Users\matej\source\repos\zalohovaci_system\zalohovaci_system\conf\backup_config.json"))
                 {
@@ -111,6 +172,66 @@ namespace zalohovaci_system_editor
                 }
                 uI.modules.Pop();
                 uI.modules.Pop();
+            };
+
+            createNewJobWindow.EditDirectories += (list) =>
+            {
+                DirectorySelectorWindow tempDSW = new DirectorySelectorWindow();
+                DirectoryListWindow tempDLW = new DirectoryListWindow();
+                DoublePane doublePane2 = new DoublePane()
+                {
+                    LeftWindow = tempDSW,
+                    RightWindow = tempDLW
+                };
+
+                uI.modules.Push(doublePane2);
+
+                tempDLW.SetDirectories(list);
+                tempDSW.SelectWindow();
+
+                tempDSW.OnDirectorySelected += (directory) =>
+                {
+                    tempDLW.AddDirectory(directory);
+                };
+
+                tempDSW.SwitchWindow += () =>
+                {
+                    doublePane2.ActiveSide = true;
+                    tempDLW.SelectWindow();
+                };
+
+                tempDSW.ChangeDriveEvent += () =>
+                {
+                    ChangeDriveWindow changeDriveWindow = new ChangeDriveWindow();
+                    dialogueBox.Window = changeDriveWindow;
+                    uI.modules.Push(dialogueBox);
+                    changeDriveWindow.Confirm += (drive) =>
+                    {
+                        tempDSW.ChangeDrive(drive);
+                        uI.modules.Pop();
+                    };
+                    changeDriveWindow.Cancel += () =>
+                    {
+                        uI.modules.Pop();
+                    };
+                };
+
+                tempDLW.SwitchWindow += () =>
+                {
+                    doublePane2.ActiveSide = false;
+                    tempDSW.SelectWindow();
+                };
+
+                tempDLW.Cancel += () =>
+                {
+                    uI.modules.Pop();
+                };
+
+                tempDLW.SaveDirectories += (directories) =>
+                {
+                    createNewJobWindow.SaveDirectories(directories);
+                    uI.modules.Pop();
+                };
             };
 
             deleteJobDBox.Cancel += () =>
@@ -123,8 +244,8 @@ namespace zalohovaci_system_editor
                 BackupJob? job = backupJobs.FirstOrDefault(j => j.Id == id);
                 if (job != null)
                 {
-                    backupJobs.Remove(job);
                     configListWindow.RemoveBackup(job);
+                    backupJobs.Remove(job);
                     using (StreamWriter sw = new StreamWriter(@"C:\Users\matej\source\repos\zalohovaci_system\zalohovaci_system\conf\backup_config.json"))
                     {
                         sw.Write(JsonConvert.SerializeObject(backupJobs, Formatting.Indented));

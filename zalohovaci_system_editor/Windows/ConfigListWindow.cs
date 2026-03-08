@@ -49,7 +49,7 @@ namespace zalohovaci_system_editor.Windows
             }
             dropdownList = new DropdownList(ConfigNames);
             dropdownList.IsActive = true;
-            dropdownList.OnConfigSelected += (index) =>
+            dropdownList.OnValueSelected += (index) =>
             {
                 OnConfigSelected?.Invoke(BackupJobs[index]);
             };
@@ -102,6 +102,10 @@ namespace zalohovaci_system_editor.Windows
             {
                 BackupJobs.RemoveAt(index);
                 dropdownList.Values.RemoveAt(index);
+            }
+            if (dropdownList.selectedLine >= dropdownList.Values.Count)
+            {
+                dropdownList.selectedLine = dropdownList.Values.Count - 1;
             }
         }
     }

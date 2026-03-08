@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using zalohovaci_system.Model;
 using zalohovaci_system_editor.Components;
 
 namespace zalohovaci_system_editor.Windows
@@ -25,6 +26,22 @@ namespace zalohovaci_system_editor.Windows
     
         private void CreateNewJob()
         {
+            TextBox id = Components[0] as TextBox;
+            DropdownList sources = Components[1] as DropdownList;
+            DropdownList targets = Components[2] as DropdownList;
+            OptionsBox method = Components[3] as OptionsBox;
+            TextBox timing = Components[4] as TextBox;
+            TextBox retCount = Components[5] as TextBox;
+            TextBox retSize = Components[6] as TextBox;
+
+            SelectedBackupJob.Id = id.Value;
+            SelectedBackupJob.Sources = sources.Values;
+            SelectedBackupJob.Targets = targets.Values;
+            SelectedBackupJob.Method = method.Value == "Full" ? BackupMethod.Full : method.Value == "Differencial" ? BackupMethod.Differential : BackupMethod.Incremental;
+            SelectedBackupJob.Timing = timing.Value;
+            SelectedBackupJob.Retention.Count = Convert.ToInt32(retCount.Value);
+            SelectedBackupJob.Retention.Size = Convert.ToInt32(retSize.Value);
+
             Create?.Invoke(SelectedBackupJob.Id);
         }
     

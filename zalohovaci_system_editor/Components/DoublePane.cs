@@ -17,7 +17,7 @@ namespace zalohovaci_system_editor.Components
 
         public void Draw()
         {
-            Console.Clear();
+            Console.SetCursorPosition(0, 0);
             Console.WriteLine($"┌{"".PadLeft(Console.WindowWidth / 2 - 2, '─')}┐┌{"".PadLeft(Console.WindowWidth / 2 - 2, '─')}┐");
             for (int i = 0; i < Console.WindowHeight - 2; i++)
             {
