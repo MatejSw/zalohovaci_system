@@ -14,6 +14,17 @@ namespace zalohovaci_system_api
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            builder.Services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(
+                    policy =>
+                    {
+                        policy.AllowAnyOrigin()
+                            .AllowAnyHeader()
+                            .AllowAnyMethod();
+                    });
+            });
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -27,6 +38,7 @@ namespace zalohovaci_system_api
 
             app.UseAuthorization();
 
+            app.UseCors();
 
             app.MapControllers();
 

@@ -1,0 +1,13 @@
+.wrapper {
+  display: block;
+  width: 100%;
+
+  .navigation {
+    flex: 0 0 250px;
+  }
+
+  .content {
+    flex: 1 1 250px;
+    padding: 1rem;
+  }
+}

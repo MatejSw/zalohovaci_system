@@ -1,0 +1,20 @@
+<table class="table table-striped table-hover">
+  <thead>
+  <tr>
+    <th scope="col">ID</th>
+    <th scope="col">Status</th>
+    <th scope="col"></th>
+  </tr>
+  </thead>
+  <tbody>
+    @for (item of jobs; track item) {
+      <tr>
+        <td>{{ item.jobId }}</td>
+        <td>aktivni</td>
+        <td>
+          <a routerLink="/job/{{ item.jobId }}"><i class="bi bi-eye"></i></a>
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>

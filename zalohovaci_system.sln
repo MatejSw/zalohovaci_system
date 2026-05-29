@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.14.36203.30
+# Visual Studio Version 18
+VisualStudioVersion = 18.6.11822.322 stable
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "zalohovaci_system", "zalohovaci_system\zalohovaci_system.csproj", "{02632B9D-768A-40B7-87A8-DB75019A75DE}"
 EndProject
@@ -15,21 +15,21 @@ EndProject
 Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "zalohovaci_system_admin", "zalohovaci_system_admin\", "{F5FFDEF6-2497-D6D3-E559-F9CDA817235A}"
 	ProjectSection(WebsiteProperties) = preProject
 		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.8"
-		Debug.AspNetCompiler.VirtualPath = "/localhost_65155"
+		Debug.AspNetCompiler.VirtualPath = "/localhost_50231"
 		Debug.AspNetCompiler.PhysicalPath = "zalohovaci_system_admin\"
-		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_65155\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_50231\"
 		Debug.AspNetCompiler.Updateable = "true"
 		Debug.AspNetCompiler.ForceOverwrite = "true"
 		Debug.AspNetCompiler.FixedNames = "false"
 		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.VirtualPath = "/localhost_65155"
+		Release.AspNetCompiler.VirtualPath = "/localhost_50231"
 		Release.AspNetCompiler.PhysicalPath = "zalohovaci_system_admin\"
-		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_65155\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_50231\"
 		Release.AspNetCompiler.Updateable = "true"
 		Release.AspNetCompiler.ForceOverwrite = "true"
 		Release.AspNetCompiler.FixedNames = "false"
 		Release.AspNetCompiler.Debug = "False"
-		VWDPort = "65155"
+		VWDPort = "50231"
 		SlnRelativePath = "zalohovaci_system_admin\"
 	EndProjectSection
 EndProject

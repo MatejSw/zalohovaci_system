@@ -1,0 +1,27 @@
+.navigation-wrapper {
+  background-color: #3795cc;
+  width: 100%;
+
+  ul {
+    margin: 0;
+    padding: 0;
+
+    li {
+      display: inline-block;
+
+      a {
+        display: inline-block;
+        color: white;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 20px;
+        padding: 20px;
+        border-right: 1px solid #74c1ed;
+
+        &:hover {
+          background-color: #74c1ed;
+        }
+      }
+    }
+  }
+}
