@@ -1,0 +1,13 @@
+<h1>Zálohovací práce {{ job.jobId }}</h1>
+
+<div class="alert alert-light">
+  <ul>
+    <li>Metoda: {{ method.methodName }}</li>
+    <li>Retence: <ul>
+      <li>Počet: {{ retention.count }}</li>
+      <li>Velikost: {{ retention.size }}</li>
+    </ul></li>
+    <li>Časování: {{ job.timing }}</li>
+    <li>Vytvořeno: {{ job.createdAt }}</li>
+  </ul>
+</div>

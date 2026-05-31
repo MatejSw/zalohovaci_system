@@ -15,5 +15,19 @@ namespace zalohovaci_system_api.Controllers
 
             return data;
         }
+
+        [HttpGet("job/{id}")]
+        public IEnumerable<PathToJobCombo>? GetByJobId(int id, int? type)
+        {
+            IEnumerable<PathToJobCombo>? data = context.PathToJobs.Where(x => x.jobId == id);
+
+            if (type.HasValue) data = data.Where(x => x.pathType == type);
+
+            if (data == null)
+            {
+                return null;
+            }
+            return data;
+        }
     }
 }

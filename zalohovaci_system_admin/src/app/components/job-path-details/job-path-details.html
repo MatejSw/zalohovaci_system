@@ -1,0 +1,10 @@
+<div class="alert alert-light">
+  <h2>{{ title }}</h2>
+  <ul>
+    @for (item of paths; track item.id) {
+      <li>{{ item.filepath }}</li>
+    } @empty {
+      <li>Nemá žádné zadané cesty.</li>
+    }
+  </ul>
+</div>

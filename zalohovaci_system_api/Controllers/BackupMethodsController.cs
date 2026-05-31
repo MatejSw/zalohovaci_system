@@ -15,5 +15,16 @@ namespace zalohovaci_system_api.Controllers
 
             return data;
         }
+
+        [HttpGet("{id}")]
+        public BackupMethod GetById(int id)
+        {
+            BackupMethod? data = context.BackupMethod.Where(x => x.id == id).FirstOrDefault();
+            if (data == null)
+            {
+                return new BackupMethod();
+            }
+            return data;
+        }
     }
 }

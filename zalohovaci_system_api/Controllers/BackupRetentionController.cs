@@ -15,5 +15,16 @@ namespace zalohovaci_system_api.Controllers
 
             return data;
         }
+
+        [HttpGet("{id}")]
+        public BackupRetention GetById(int id)
+        {
+            BackupRetention? data = context.BackupRetention.Where(x => x.id == id).FirstOrDefault();
+            if (data == null)
+            {
+                return new BackupRetention();
+            }
+            return data;
+        }
     }
 }

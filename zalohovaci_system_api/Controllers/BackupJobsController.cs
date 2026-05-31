@@ -15,5 +15,16 @@ namespace zalohovaci_system_api.Controllers
 
             return data;
         }
+
+        [HttpGet("{id}")]
+        public BackupJob GetById(int id)
+        {
+            BackupJob? data = context.BackupJobs.Where(x => x.Id == id).FirstOrDefault();
+            if (data == null)
+            {
+                return new BackupJob();
+            }
+            return data;
+        }
     }
 }

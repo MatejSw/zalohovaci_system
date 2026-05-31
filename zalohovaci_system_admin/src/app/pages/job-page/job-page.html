@@ -1,1 +1,12 @@
-<p>job-page works!</p>
+<a routerLink="/jobs" class="btn btn-outline-danger" style="margin-bottom: 25px"><i class="bi bi-arrow-return-left"></i></a>
+
+<app-job-details [job]="job()" [method]="method()" [retention]="retention()"/>
+
+<ul class="paths">
+  <li>
+    <app-job-path-details [paths]="sourcePaths()" [title]="'Zdrojové cesty'"/>
+  </li>
+  <li>
+    <app-job-path-details [paths]="targetPaths()" [title]="'Cílové cesty'"/>
+  </li>
+</ul>
