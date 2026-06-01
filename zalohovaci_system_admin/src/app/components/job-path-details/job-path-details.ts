@@ -1,5 +1,4 @@
 import { Component, Input } from '@angular/core';
-import { Path } from '../../models/path';
 
 @Component({
   selector: 'app-job-path-details',
@@ -9,7 +8,7 @@ import { Path } from '../../models/path';
 })
 export class JobPathDetails {
   @Input()
-  public paths: Path[];
+  public paths: string[];
   @Input()
   public title: string;
 }

@@ -16,6 +16,6 @@ export class JobService {
   }
 
   public findById(id: number): Observable<BackupJob> {
-    return this.http.get<BackupJob>('http://localhost:5210/api/BackupJobs/' + id);
+    return this.http.get<BackupJob>('http://localhost:5210/api/BackupJobs/full/' + id);
   }
 }

@@ -1,7 +1,4 @@
 import { Component, Input } from '@angular/core';
-import { Path } from '../../models/path';
-import { BackupMethod } from '../../models/backup-method';
-import { BackupRetention } from '../../models/backup-retention';
 import { BackupJob } from '../../models/backup-job';
 
 @Component({
@@ -11,10 +8,6 @@ import { BackupJob } from '../../models/backup-job';
   styleUrl: './job-details.scss',
 })
 export class JobDetails {
-  @Input()
-  public method: BackupMethod;
-  @Input()
-  public retention: BackupRetention;
   @Input()
   public job: BackupJob;
 }
