@@ -18,4 +18,8 @@ export class JobService {
   public findById(id: number): Observable<BackupJob> {
     return this.http.get<BackupJob>('http://localhost:5210/api/BackupJobs/full/' + id);
   }
+
+  public save(job: BackupJob): Observable<BackupJob> {
+    return this.http.put<BackupJob>('http://localhost:5210/api/BackupJobs/' + job.id, job)
+  }
 }

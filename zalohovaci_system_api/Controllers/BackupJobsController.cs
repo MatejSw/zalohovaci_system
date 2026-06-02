@@ -53,5 +53,52 @@ namespace zalohovaci_system_api.Controllers
 
             return data;
         }
+
+        [HttpPut("{id}")]
+        public BackupJobComplete Update(int id, BackupJobComplete data)
+        {
+            BackupJob job = context.BackupJobs.Find(id);
+            
+            BackupRetention retention = new()
+            {
+                count = data.retentionCount,
+                size = data.retentionSize
+            };
+            bool newRetention = true;
+
+            foreach (BackupRetention item in context.BackupRetention)
+            {
+                if (data.retentionCount == item.count && data.retentionSize == item.size)
+                {
+                    retention = item;
+                    newRetention = false;
+                    break;
+                }
+            }
+
+            if (newRetention)
+            {
+                context.BackupRetention.Add(retention);
+            }
+
+            BackupMethod method = new()
+            {
+                methodName = data.method
+            };
+
+            foreach (BackupMethod item in context.BackupMethod)
+            {
+                if (item.methodName.ToLower() == method.methodName.ToLower()) method = item;
+            }
+
+            job.method = method.id;
+            job.retention = retention.id;
+            job.timing = data.timing;
+            job.jobId = data.jobId;
+
+            context.SaveChanges();
+
+            return data;
+        }
     }
 }

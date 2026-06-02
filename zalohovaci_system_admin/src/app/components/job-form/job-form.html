@@ -1,0 +1,13 @@
+<h1>Editace zálohovací práce</h1>
+
+<div class="alert alert-light">
+  <ul>
+    <li>ID: <input type="text" class="form-control" [formField]="form.jobId"></li>
+    <li>Metoda: <input type="text" class="form-control" [formField]="form.method"></li>
+    <li>Retence: <ul>
+      <li>Počet: <input type="number" class="form-control" [formField]="form.retentionCount"></li>
+      <li>Velikost: <input type="number" class="form-control" [formField]="form.retentionSize"></li>
+    </ul></li>
+    <li>Časování: <input type="text" class="form-control" [formField]="form.timing"></li>
+  </ul>
+</div>
