@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\zalohovaci_system\zalohovaci_system.csproj" />
+    <ProjectReference Include="..\zalohovaci_system_api\zalohovaci_system_api.csproj" />
   </ItemGroup>
 
 </Project>

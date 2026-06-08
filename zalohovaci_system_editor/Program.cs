@@ -1,8 +1,12 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.EntityFrameworkCore.Diagnostics;
+using Newtonsoft.Json;
 using zalohovaci_system.Model;
+using zalohovaci_system_api;
+using zalohovaci_system_api.Models;
 using zalohovaci_system_editor.Components;
 using zalohovaci_system_editor.Services;
 using zalohovaci_system_editor.Windows;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace zalohovaci_system_editor
 {
@@ -13,7 +17,51 @@ namespace zalohovaci_system_editor
             Console.CursorVisible = false;
             Console.Title = "Zálohovací systém - Editor";
 
-            List<BackupJob> backupJobs = JsonConvert.DeserializeObject<List<BackupJob>>(File.ReadAllText(@"C:\Users\matej\source\repos\zalohovaci_system\zalohovaci_system\conf\backup_config.json")) ?? new List<BackupJob>();
+            MyContext context = new MyContext();
+
+            List<zalohovaci_system.Model.BackupJob> backupJobs = new();
+
+            for (int i = 0; i < context.BackupJobs.Count(); i++)
+            {
+                zalohovaci_system_api.Models.BackupJob backupJob = context.BackupJobs.ToList()[i];
+
+                zalohovaci_system.Model.BackupMethod method = zalohovaci_system.Model.BackupMethod.Full;
+                
+                switch (context.BackupMethod.Find(backupJob.method).id)
+                {
+                    case 1:
+                        method = zalohovaci_system.Model.BackupMethod.Full;
+                        break;
+                    case 2:
+                        method = zalohovaci_system.Model.BackupMethod.Differential;
+                        break;
+                    case 3:
+                        method = zalohovaci_system.Model.BackupMethod.Incremental;
+                        break;
+
+                }
+
+                zalohovaci_system.Model.BackupRetention retention = new()
+                {
+                    Size = context.BackupRetention.Find(backupJob.retention).size,
+                    Count = context.BackupRetention.Find(backupJob.retention).count
+                };
+                List<int> sourcesIds = context.PathToJobs.Where(x => x.jobId == backupJob.Id && x.pathType == 1).Select(x => x.pathId).ToList();
+                List<int> targetsIds = context.PathToJobs.Where(x => x.jobId == backupJob.Id && x.pathType == 2).Select(x => x.pathId).ToList();
+                List<string> sources = context.FilePaths.Where(x => sourcesIds.Contains(x.id)).Select(x => x.filepath).ToList();
+                List<string> targets = context.FilePaths.Where(x => targetsIds.Contains(x.id)).Select(x => x.filepath).ToList();
+                zalohovaci_system.Model.BackupJob backup = new()
+                {
+                    Id = backupJob.jobId,
+                    Sources = sources,
+                    Targets = targets,
+                    Retention = retention,
+                    Method = method,
+                    Timing = backupJob.timing
+                };
+
+                backupJobs.Add(backup);
+            }
 
             ConfigListWindow configListWindow = new ConfigListWindow(backupJobs);
             EditorWindow editorWindow = new EditorWindow();
@@ -65,10 +113,7 @@ namespace zalohovaci_system_editor
             editorWindow.SaveChanges += () =>
             {
                 configListWindow.SaveBackup(editorWindow.SelectedBackupJob);
-                using (StreamWriter sw = new StreamWriter(@"C:\Users\matej\source\repos\zalohovaci_system\zalohovaci_system\conf\backup_config.json"))
-                {
-                    sw.Write(JsonConvert.SerializeObject(backupJobs, Formatting.Indented));
-                }
+                SaveChanges(backupJobs);
             };
 
             editorWindow.EditDirectories += (list) =>
@@ -139,14 +184,14 @@ namespace zalohovaci_system_editor
             createNewJobDBox.Create += (id) =>
             {
                 singlePane.ParentWindow = createNewJobWindow;
-                BackupJob job = new BackupJob()
+                zalohovaci_system.Model.BackupJob job = new zalohovaci_system.Model.BackupJob()
                 {
                     Id = id,
                     Sources = new List<string>(),
                     Targets = new List<string>(),
                     Timing = "* * * * *",
-                    Method = BackupMethod.Full,
-                    Retention = new BackupRetention()
+                    Method = zalohovaci_system.Model.BackupMethod.Full,
+                    Retention = new zalohovaci_system.Model.BackupRetention()
                     {
                         Size = 0,
                         Count = 0
@@ -164,12 +209,9 @@ namespace zalohovaci_system_editor
 
             createNewJobWindow.Create += (id) =>
             {
-                BackupJob job = createNewJobWindow.SelectedBackupJob;
+                zalohovaci_system.Model.BackupJob job = createNewJobWindow.SelectedBackupJob;
                 configListWindow.AddBackup(job);
-                using (StreamWriter sw = new StreamWriter(@"C:\Users\matej\source\repos\zalohovaci_system\zalohovaci_system\conf\backup_config.json"))
-                {
-                    sw.Write(JsonConvert.SerializeObject(backupJobs, Formatting.Indented));
-                }
+                AddJob(job);
                 uI.modules.Pop();
                 uI.modules.Pop();
             };
@@ -241,15 +283,12 @@ namespace zalohovaci_system_editor
 
             deleteJobDBox.Delete += (id) =>
             {
-                BackupJob? job = backupJobs.FirstOrDefault(j => j.Id == id);
+                zalohovaci_system.Model.BackupJob? job = backupJobs.FirstOrDefault(j => j.Id == id);
                 if (job != null)
                 {
                     configListWindow.RemoveBackup(job);
                     backupJobs.Remove(job);
-                    using (StreamWriter sw = new StreamWriter(@"C:\Users\matej\source\repos\zalohovaci_system\zalohovaci_system\conf\backup_config.json"))
-                    {
-                        sw.Write(JsonConvert.SerializeObject(backupJobs, Formatting.Indented));
-                    }
+                    RemoveJob(job);
                 }
                 uI.modules.Pop();
             };
@@ -260,6 +299,121 @@ namespace zalohovaci_system_editor
                 ConsoleKeyInfo key = Console.ReadKey(true);
                 uI.HandleKey(key);
             }
+        }
+
+        public static void SaveChanges(List<zalohovaci_system.Model.BackupJob> list)
+        {
+            MyContext context = new MyContext();
+
+            for (int i = 0; i < list.Count; i++)
+            {
+                zalohovaci_system_api.Models.BackupJob db = context.BackupJobs.ToList()[i] ?? new();
+                zalohovaci_system.Model.BackupJob job = list[i];
+
+                zalohovaci_system_api.Models.BackupRetention retention = new()
+                {
+                    count = job.Retention.Count,
+                    size = job.Retention.Size
+                };
+                bool newRetention = true;
+
+                foreach (zalohovaci_system_api.Models.BackupRetention item in context.BackupRetention)
+                {
+                    if (job.Retention.Count == item.count && job.Retention.Size == item.size)
+                    {
+                        retention = item;
+                        newRetention = false;
+                        break;
+                    }
+                }
+
+                if (newRetention)
+                {
+                    context.BackupRetention.Add(retention);
+                }
+
+                zalohovaci_system_api.Models.BackupMethod method = new()
+                {
+                    methodName = job.Method.ToString()
+                };
+
+                foreach (zalohovaci_system_api.Models.BackupMethod item in context.BackupMethod)
+                {
+                    if (item.methodName.ToLower() == method.methodName.ToLower()) method = item;
+                }
+
+                db.method = method.id;
+                db.retention = retention.id;
+                db.timing = job.Timing;
+                db.jobId = job.Id;
+            }
+
+            context.SaveChanges();
+        }
+
+        public static void AddJob(zalohovaci_system.Model.BackupJob job)
+        {
+            MyContext context = new MyContext();
+            zalohovaci_system_api.Models.BackupJob db = new();
+
+            zalohovaci_system_api.Models.BackupRetention retention = new()
+            {
+                count = job.Retention.Count,
+                size = job.Retention.Size
+            };
+            bool newRetention = true;
+
+            foreach (zalohovaci_system_api.Models.BackupRetention item in context.BackupRetention)
+            {
+                if (job.Retention.Count == item.count && job.Retention.Size == item.size)
+                {
+                    retention = item;
+                    newRetention = false;
+                    break;
+                }
+            }
+
+            if (newRetention)
+            {
+                context.BackupRetention.Add(retention);
+                context.SaveChanges();
+            }
+
+            zalohovaci_system_api.Models.BackupMethod method = new()
+            {
+                methodName = job.Method.ToString()
+            };
+
+            foreach (zalohovaci_system_api.Models.BackupMethod item in context.BackupMethod)
+            {
+                if (item.methodName.ToLower() == method.methodName.ToLower()) method = item;
+            }
+
+            db.method = method.id;
+            db.retention = retention.id;
+            db.timing = job.Timing;
+            db.jobId = job.Id;
+            db.createdAt = DateTime.Now;
+
+            context.BackupJobs.Add(db);
+            context.SaveChanges();
+        }
+
+        public static void RemoveJob(zalohovaci_system.Model.BackupJob job)
+        {
+            MyContext context = new MyContext();
+            zalohovaci_system_api.Models.BackupJob jobToRemove = new();
+
+            foreach (zalohovaci_system_api.Models.BackupJob item in context.BackupJobs)
+            {
+                if (job.Id == item.jobId)
+                {
+                    jobToRemove = item;
+                }
+            }
+
+            context.BackupJobs.Remove(jobToRemove);
+            context.SaveChanges();
         }
     }
 }

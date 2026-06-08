@@ -2,7 +2,6 @@
   <thead>
   <tr>
     <th scope="col">ID</th>
-    <th scope="col">Status</th>
     <th scope="col"></th>
   </tr>
   </thead>
@@ -10,7 +9,6 @@
     @for (item of jobs; track item) {
       <tr>
         <td>{{ item.jobId }}</td>
-        <td>Offline</td>
         <td>
           <a routerLink="/job/{{ item.id }}"><i class="bi bi-eye"></i></a>
         </td>

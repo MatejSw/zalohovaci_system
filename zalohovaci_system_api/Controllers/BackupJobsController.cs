@@ -79,6 +79,7 @@ namespace zalohovaci_system_api.Controllers
             if (newRetention)
             {
                 context.BackupRetention.Add(retention);
+                context.SaveChanges();
             }
 
             BackupMethod method = new()
