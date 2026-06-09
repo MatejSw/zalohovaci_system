@@ -1,5 +1,6 @@
 <a routerLink="/jobs" class="btn btn-outline-danger" style="margin-bottom: 25px"><i class="bi bi-arrow-return-left"></i></a>
 <a routerLink="/editJob/{{ this.route.snapshot.params['id'] }}" class="btn btn-outline-primary" style="margin-bottom: 25px; margin-left: 10px"><i class="bi bi-pencil-square"></i></a>
+<a routerLink="/log" class="btn btn-outline-success" style="margin-bottom: 25px; margin-left: 10px"><i class="bi bi-receipt-cutoff"></i></a>
 
 <app-job-details [job]="job()"/>
 
