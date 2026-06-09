@@ -4,6 +4,6 @@
     {
         public int id { get; set; }
         public string pcname { get; set; }
-        public string mac { get; set; }
+        public string ip { get; set; }
     }
 }

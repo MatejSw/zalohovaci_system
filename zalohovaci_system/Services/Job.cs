@@ -62,7 +62,7 @@ namespace zalohovaci_system.Services
                 file.Flush();
             }
 
-            Console.WriteLine($"[{DateTime.Now.Hour}:{DateTime.Now.Minute.ToString().PadLeft(2, '0')}:{DateTime.Now.Second.ToString().PadLeft(2, '0')}] Backup job (ID: {id}) completed using method: {method}.");
+            JobLogger.Log($"Backup job (ID: {id}) completed using method: {method}.", id, "Info");
         }
 
         public virtual bool CheckRetention(BackupJob job, List<Snapshot> snapshots)

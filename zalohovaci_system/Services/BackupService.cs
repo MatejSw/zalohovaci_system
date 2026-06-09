@@ -52,7 +52,7 @@ namespace zalohovaci_system.Services
                     {
                         Snapshots = new List<Snapshot>();
                     }
-                    Console.WriteLine($"[{DateTime.Now.Hour}:{DateTime.Now.Minute.ToString().PadLeft(2, '0')}:{DateTime.Now.Second.ToString().PadLeft(2, '0')}] Running job (ID: {job.Id})...");
+                    JobLogger.Log($"Running job (ID: {job.Id})...", job.Id, "Info");
                     try
                     {
                         switch (job.Method)
@@ -73,7 +73,7 @@ namespace zalohovaci_system.Services
                     }
                     catch (Exception ex) 
                     {
-                        Console.WriteLine($"[{DateTime.Now.Hour}:{DateTime.Now.Minute.ToString().PadLeft(2, '0')}:{DateTime.Now.Second.ToString().PadLeft(2, '0')}] Backup job (ID: {job.Id}) failed: {ex.Message}");
+                        JobLogger.Log($"Backup job (ID: {job.Id}) failed: {ex.Message}", job.Id, "Error");
                         job.NextOccurence = (DateTime)cronHandler.GetNextOccurrence(job.Timing, DateTime.UtcNow);
                         try
                         {
@@ -106,7 +106,7 @@ namespace zalohovaci_system.Services
                 {
                     Snapshots = new List<Snapshot>();
                 }
-                Console.WriteLine($"[{DateTime.Now.Hour}:{DateTime.Now.Minute.ToString().PadLeft(2, '0')}:{DateTime.Now.Second.ToString().PadLeft(2, '0')}] Forcing job (ID: {job.Id})...");
+                JobLogger.Log($"Forcing job (ID: {job.Id})...", job.Id, "Info");
                 try
                 {
                     switch (job.Method)
@@ -127,7 +127,7 @@ namespace zalohovaci_system.Services
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"[{DateTime.Now.Hour}:{DateTime.Now.Minute.ToString().PadLeft(2, '0')}:{DateTime.Now.Second.ToString().PadLeft(2, '0')}] Backup job (ID: {job.Id}) failed: {ex.Message}");
+                    JobLogger.Log($"Backup job (ID: {job.Id}) failed: {ex.Message}", job.Id, "Error");
                     job.NextOccurence = (DateTime)cronHandler.GetNextOccurrence(job.Timing, DateTime.UtcNow);
                     try
                     {

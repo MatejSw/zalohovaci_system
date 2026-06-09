@@ -8,21 +8,21 @@ namespace zalohovaci_system_api.Controllers
     {
         private MyContext context = new MyContext();
 
-        //[HttpGet]
-        //public IEnumerable<Client> All()
-        //{
-        //    IEnumerable<BackupMethod> data = context.BackupMethod;
+        [HttpGet]
+        public IEnumerable<Client> All()
+        {
+            IEnumerable<Client> data = context.Client;
 
-        //    return data;
-        //}
+            return data;
+        }
 
         [HttpGet("{id}")]
-        public BackupMethod GetById(int id)
+        public Client GetById(int id)
         {
-            BackupMethod? data = context.BackupMethod.Where(x => x.id == id).FirstOrDefault();
+            Client? data = context.Client.Where(x => x.id == id).FirstOrDefault();
             if (data == null)
             {
-                return new BackupMethod();
+                return new Client();
             }
             return data;
         }

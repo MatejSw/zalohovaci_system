@@ -11,6 +11,9 @@ namespace zalohovaci_system_api
         public DbSet<FilePath> FilePaths { get; set; }
         public DbSet<FilePathType> FilePathType { get; set; }
         public DbSet<PathToJobCombo> PathToJobs { get; set; }
+        public DbSet<Log> Logs { get; set; }
+        public DbSet<Client> Client { get; set; }
+        public DbSet<ClientToJobCombo> ClientsToJobs { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

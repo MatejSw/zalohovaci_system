@@ -330,6 +330,7 @@ namespace zalohovaci_system_editor
                 if (newRetention)
                 {
                     context.BackupRetention.Add(retention);
+                    context.SaveChanges();
                 }
 
                 zalohovaci_system_api.Models.BackupMethod method = new()
