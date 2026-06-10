@@ -28,7 +28,7 @@ export const routes: Routes = [
     component: EditJobPage,
   },
   {
-    path: 'log',
+    path: 'logs',
     component: LogPage,
   }
 ];

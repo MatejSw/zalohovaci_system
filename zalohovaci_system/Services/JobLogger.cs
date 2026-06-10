@@ -28,7 +28,7 @@ namespace zalohovaci_system.Services
 
             context.Logs.Add(new()
             {
-                message = message,
+                message = $"{time}{jobId}: {message}",
                 createdAt = DateTime.Now,
                 jobId = id,
                 clientId = clientId,
