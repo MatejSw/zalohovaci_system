@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { Log } from '../../models/log';
 
 @Component({
   selector: 'app-log-filters',
@@ -7,4 +8,9 @@ import { RouterLink } from '@angular/router';
   templateUrl: './log-filters.html',
   styleUrl: './log-filters.scss',
 })
-export class LogFilters {}
+export class LogFilters {
+  @Input()
+  public jobs: Log[];
+  @Input()
+  public clients: Log[];
+}

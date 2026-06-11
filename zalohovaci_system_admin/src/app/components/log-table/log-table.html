@@ -4,6 +4,11 @@
       <p>
         {{ item.message }}
       </p>
+    }@empty {
+      <div class="d-flex align-items-center">
+        <strong role="status">Načítání...</strong>
+        <div class="spinner-border ms-auto" aria-hidden="true"></div>
+      </div>
     }
   </div>
 </div>

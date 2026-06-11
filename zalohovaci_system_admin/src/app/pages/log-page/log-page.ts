@@ -15,6 +15,11 @@ import { distinct } from 'rxjs';
 export class LogPage {
   public data: WritableSignal<Log[]> = signal([]);
 
+  public jobIds: WritableSignal<Log[]> = signal([]);
+  public clientIds: WritableSignal<Log[]> = signal([]);
+
+  public filter: WritableSignal<string> = signal("Žádný");
+
   public constructor(
     private service: LogService,
     private route: ActivatedRoute,
@@ -22,14 +27,24 @@ export class LogPage {
     const jobId: number = route.snapshot.queryParams['jobId'];
     const clientId: number = route.snapshot.queryParams['clientId'];
 
+    this.service.findAll().subscribe((result) => {
+      this.data.set(result)
+      this.clientIds.set(
+        result.filter((Log, i, arr) => arr.findIndex(t => t.clientId === Log.clientId) === i),
+      );
+      this.jobIds.set(
+        result.filter((Log, i, arr) => arr.findIndex((t) => t.jobId === Log.jobId) === i),
+      );
+    })
+
     if (jobId != null) {
       this.service.findByJobId(jobId).subscribe((result) => {
         this.data.set(result);
       });
+      this.filter.set('Záložní úloha ' + jobId.toString());
     } else if (clientId != null) {
       this.service.findByJobId(jobId).subscribe((result) => this.data.set(result));
-    } else {
-      this.service.findAll().subscribe((result) => this.data.set(result));
+      this.filter.set('Klient ' + clientId.toString());
     }
   }
 }

@@ -6,9 +6,11 @@
       </a>
 
       <ul class="dropdown-menu">
-        <li><a class="dropdown-item" routerLink="/logs" [queryParams]="{ jobId: 1 }">Action</a></li>
-        <li><a class="dropdown-item" href="#">Another action</a></li>
-        <li><a class="dropdown-item" href="#">Something else here</a></li>
+        @for (item of jobs; track item) {
+          <li><a class="dropdown-item" routerLink="/logs" [queryParams]="{ jobId: item.jobId }" queryParamsHandling="replace">{{ item.jobId }}</a></li>
+        }
+        <li><hr class="dropdown-divider"></li>
+        <li><a class="dropdown-item" routerLink="/logs" queryParamsHandling="replace">Žádný</a></li>
       </ul>
     </div>
   </li>
@@ -19,10 +21,14 @@
       </a>
 
       <ul class="dropdown-menu">
-        <li><a class="dropdown-item" href="#">Action</a></li>
-        <li><a class="dropdown-item" href="#">Another action</a></li>
-        <li><a class="dropdown-item" href="#">Something else here</a></li>
+        @for (item of clients; track item) {
+          <li><a class="dropdown-item" routerLink="/logs" [queryParams]="{ clientId: item.clientId }" queryParamsHandling="replace">{{ item.clientId }}</a></li>
+        }
+        <li><a class="dropdown-item" routerLink="/logs" queryParamsHandling="replace">Žádný</a></li>
       </ul>
     </div>
+  </li>
+  <li>
+    <a class="btn btn-primary" routerLink="/logs" [queryParams]="{ clientId: 1 }" queryParamsHandling="replace">Primary</a>
   </li>
 </ul>
