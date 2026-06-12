@@ -2,6 +2,8 @@
   <thead>
   <tr>
     <th scope="col">ID</th>
+    <th scope="col">Metoda</th>
+    <th scope="col">Časování</th>
     <th scope="col"></th>
   </tr>
   </thead>
@@ -9,6 +11,12 @@
     @for (item of jobs; track item) {
       <tr>
         <td>{{ item.jobId }}</td>
+        <td>
+          @if (item.method == '1') { Full }
+          @else if (item.method == '2') { Differential }
+          @else if (item.method == '3') { Incremental }
+          </td>
+        <td>{{ item.timing }}</td>
         <td>
           <a routerLink="/job/{{ item.id }}"><i class="bi bi-eye"></i></a>
         </td>

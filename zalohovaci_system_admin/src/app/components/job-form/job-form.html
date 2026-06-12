@@ -3,7 +3,11 @@
 <div class="alert alert-light">
   <ul>
     <li>ID: <input type="text" class="form-control" [formField]="form.jobId"></li>
-    <li>Metoda: <input type="text" class="form-control" [formField]="form.method"></li>
+    <li>Metoda: <select class="form-select" aria-label="Default select example" [formField]="form.method">
+      <option value="Full">Full</option>
+      <option value="Differential">Differential</option>
+      <option value="Incremental">Incremental</option>
+    </select></li>
     <li>Retence: <ul>
       <li>Počet: <input type="number" class="form-control" [formField]="form.retentionCount"></li>
       <li>Velikost: <input type="number" class="form-control" [formField]="form.retentionSize"></li>

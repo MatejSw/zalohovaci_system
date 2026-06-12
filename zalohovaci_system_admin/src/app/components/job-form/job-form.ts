@@ -11,7 +11,4 @@ import { FieldTree, FormField } from '@angular/forms/signals';
 export class JobForm {
   @Input()
   public form: FieldTree<BackupJob>;
-
-  @Output()
-  public saved: EventEmitter<void> = new EventEmitter();
 }

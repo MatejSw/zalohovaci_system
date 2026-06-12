@@ -17,14 +17,44 @@ namespace zalohovaci_system_api.Controllers
         }
 
         [HttpGet("{id}")]
-        public Client GetById(int id)
+        public ClientComplete GetById(int id)
         {
-            Client? data = context.Client.Where(x => x.id == id).FirstOrDefault();
-            if (data == null)
+            ClientComplete data = new()
             {
-                return new Client();
-            }
+                id = context.Client.Where(x => x.id == id).FirstOrDefault()?.id ?? 0,
+                pcname = context.Client.Where(x => x.id == id).FirstOrDefault()?.pcname ?? "",
+                ip = context.Client.Where(x => x.id == id).FirstOrDefault()?.ip ?? ""
+            };
+            data.jobs = context.ClientsToJobs.Where(x => x.clientId == data.id).Select(x => x.jobId).ToList();
             return data;
+        }
+
+        [HttpPut("{id}")]
+        public ClientComplete Update(int id, ClientComplete client)
+        {
+            Client db = context.Client.Where(x => x.id == id).FirstOrDefault() ?? new Client();
+
+            if (db.id == id)
+            {
+                for (int i = 0; i < client.jobs.Count; i++)
+                {
+                    if (!context.ClientsToJobs.Any(x => x.clientId == id && x.jobId == client.jobs[i]))
+                    {
+                        context.ClientsToJobs.Add(new ClientToJobCombo() { clientId = id, jobId = client.jobs[i] });
+                    }
+                }
+
+                    foreach (ClientToJobCombo combo in context.ClientsToJobs.Where(x => x.clientId == id).ToList())
+                    {
+                        if (!client.jobs.Any(x => x == combo.jobId))
+                        {
+                            context.ClientsToJobs.Remove(combo);
+                        }
+                    }
+            }
+
+            context.SaveChanges();
+            return client;
         }
     }
 }

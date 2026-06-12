@@ -1,0 +1,5 @@
+<a routerLink="/clients" class="btn btn-outline-danger" style="margin-bottom: 25px"><i class="bi bi-arrow-return-left"></i></a>
+<a routerLink="/logs" [queryParams]="{clientId: this.route.snapshot.params['id']}" class="btn btn-outline-success" style="margin-bottom: 25px; margin-left: 10px"><i class="bi bi-receipt-cutoff"></i></a>
+
+<app-client-details [client]="client()" [jobs]="jobs()" [jobList]="form" (saved)="save()"/>
+<div #liveAlertPlaceholder></div>

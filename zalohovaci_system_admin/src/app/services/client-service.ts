@@ -18,4 +18,8 @@ export class ClientService {
   public findById(id: number): Observable<Client> {
     return this.http.get<Client>('http://localhost:5210/api/Clients/' + id);
   }
+
+  public save(client: Client): Observable<Client> {
+    return this.http.put<Client>('http://localhost:5210/api/Clients/' + client.id, client);
+  }
 }

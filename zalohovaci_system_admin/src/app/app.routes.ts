@@ -5,6 +5,7 @@ import { JobPage } from './pages/job-page/job-page';
 import { ClientOverviewPage } from './pages/client-overview-page/client-overview-page';
 import { EditJobPage } from './pages/edit-job-page/edit-job-page';
 import { LogPage } from './pages/log-page/log-page';
+import { ClientPage } from './pages/client-page/client-page';
 
 export const routes: Routes = [
   {
@@ -30,5 +31,9 @@ export const routes: Routes = [
   {
     path: 'logs',
     component: LogPage,
-  }
+  },
+  {
+    path: 'client/:id',
+    component: ClientPage,
+  },
 ];

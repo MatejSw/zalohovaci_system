@@ -35,16 +35,16 @@ export class LogPage {
       this.jobIds.set(
         result.filter((Log, i, arr) => arr.findIndex((t) => t.jobId === Log.jobId) === i),
       );
-    })
 
-    if (jobId != null) {
-      this.service.findByJobId(jobId).subscribe((result) => {
-        this.data.set(result);
-      });
-      this.filter.set('Záložní úloha ' + jobId.toString());
-    } else if (clientId != null) {
-      this.service.findByJobId(jobId).subscribe((result) => this.data.set(result));
-      this.filter.set('Klient ' + clientId.toString());
-    }
+      if (jobId != null) {
+        this.service.findByJobId(jobId).subscribe((result) => {
+          this.data.set(result);
+        });
+        this.filter.set('Záložní úloha ' + jobId.toString());
+      } else if (clientId != null) {
+        this.service.findByClientId(clientId).subscribe((result) => this.data.set(result));
+        this.filter.set('Klient ' + clientId.toString());
+      }
+    })
   }
 }

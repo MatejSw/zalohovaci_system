@@ -1,0 +1,37 @@
+<h1>Klient {{ client.pcname }}</h1>
+<p>Ip Adresa: {{ client.ip }}</p>
+
+<div class="alert alert-light">
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <th scope="col">ID</th>
+      <th scope="col">Metoda</th>
+      <th scope="col">Časování</th>
+      <th scope="col"></th>
+    </tr>
+    </thead>
+    <tbody>
+      @for (item of jobs; track item; let i = $index) {
+        <tr>
+          <td>{{ item.jobId }}</td>
+          <td>
+            @if (item.method == '1') { Full }
+            @else if (item.method == '2') { Differential }
+            @else if (item.method == '3') { Incremental }
+          </td>
+          <td>{{ item.timing }}</td>
+          <td>
+            <input class="form-check-input" type="checkbox" [formField]="jobList[i].enabled">
+          </td>
+        </tr>
+      } @empty {
+        <div class="d-flex align-items-center">
+          <strong role="status">Načítání...</strong>
+          <div class="spinner-border ms-auto" aria-hidden="true"></div>
+        </div>
+      }
+    </tbody>
+  </table>
+  <button type="button" class="btn btn-primary" style="margin-bottom: 25px; margin-left: 10px" (click)="save()"><i class="bi bi-floppy-fill"></i> Uložit</button>
+</div>
